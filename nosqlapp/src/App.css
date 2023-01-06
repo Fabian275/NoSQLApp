@@ -1,0 +1,13 @@
+#quizApp {
+  margin: auto;
+  max-width: 500px;
+}
+
+#title {
+  text-align: center;
+}
+
+#startbutton {
+  width: 100%;
+  margin: 10px;
+}
