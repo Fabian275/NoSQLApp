@@ -13,6 +13,7 @@ import { db } from "./../firebaseConfig";
 function QuizFragen() {
   const [data, setData] = useState(null);
   const [quizNum, setQuizNum] = useState(0);
+  const [docID, setDocID] = useState(null);
 
   const fragen = doc(db, "NoSqlQuiz", "quiz");
   getDoc(fragen).then((docSnap) => {
@@ -23,44 +24,47 @@ function QuizFragen() {
     }
   });
 
-  async function answer(e, db) {
+  function answer(e) {
     console.log(e.currentTarget.innerText);
     console.log(quizNum);
-    //   const res = await db.collection("cities").add({
-    //     name: "Tokyo",
-    //     country: "Japan",
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Add a new document with a generated id.
+    const dbRef = collection(db, "AntwortenQuiz");
+    const data = {
+      frage1: null,
+      frage2: null,
+      frage3: null,
+    };
+
+    addDoc(dbRef, data)
+      .then((docRef) => {
+        console.log(docRef.id);
+        setDocID(docRef.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    // const docRef1 = doc(db, "AntwortenQuiz", docID);
+
+    // const updatingdata = {
+    //   frage1: e.currentTarget.innerText,
+    //   frage2: "British Columbia",
+    //   frage3: "CA",
+    // };
+
+    // setDoc(docRef1, updatingdata)
+    //   .then((docRef1) => {
+    //     console.log("Entire Document has been updated successfully");
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
     //   });
 
-    //   console.log("Added document with ID: ", res.id);
-
-    //   console.log("Add: ", res);
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     setQuizNum(quizNum + 1);
   }
-
-  //   function answer(e) {
-
-  //     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  //     // Add a new document with a generated id.
-  //     // const docRef = addDoc(collection(db, "AntwortenQuiz"), {
-  //     //   name: "Tokyo",
-  //     //   country: "Japan",
-  //     // });
-  //     // console.log("Document written with ID: ", docRef.id);
-
-  //     const res = db.collection("AntwortenQuiz").add({
-  //       name: "Tokyo",
-  //       country: "Japan",
-  //     });
-
-  //     console.log("Added document with ID: ", res.id);
-  //     // updateDoc(doc(db, "AntwortenQuiz", "Antwort"), {
-  //     //   Frage1: arrayUnion("HELLO2", "hello2"),
-  //     // });
-
-  //     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  //   }
 
   return (
     <div id="quizApp">
