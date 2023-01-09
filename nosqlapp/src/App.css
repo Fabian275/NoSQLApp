@@ -11,3 +11,11 @@
   width: 100%;
   margin: 10px;
 }
+
+.correct {
+  background-color: green;
+}
+
+.falseAnswer {
+  background-color: red;
+}

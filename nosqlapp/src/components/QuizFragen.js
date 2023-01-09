@@ -9,11 +9,16 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "./../firebaseConfig";
+import { useNavigate } from "react-router-dom";
 
-function QuizFragen() {
+function QuizFragen({ setDocID }) {
   const [data, setData] = useState(null);
   const [quizNum, setQuizNum] = useState(0);
-  const [docID, setDocID] = useState(null);
+
+  const [Answers, setAnswers] = useState([]);
+  const [Auswertung, setAuswertung] = useState(false);
+  const navigate = useNavigate();
+  //daten holen
 
   const fragen = doc(db, "NoSqlQuiz", "quiz");
   getDoc(fragen).then((docSnap) => {
@@ -24,47 +29,74 @@ function QuizFragen() {
     }
   });
 
+  //antwort auswählen
+
   function answer(e) {
-    console.log(e.currentTarget.innerText);
-    console.log(quizNum);
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const currentAntwort = e.currentTarget.innerText;
+    setAnswers((Answers) => [...Answers, currentAntwort]);
+    console.log(currentAntwort);
+    if (quizNum < 1) {
+      // console.log(e.currentTarget.innerText);
 
-    // Add a new document with a generated id.
-    const dbRef = collection(db, "AntwortenQuiz");
-    const data = {
-      frage1: null,
-      frage2: null,
-      frage3: null,
-    };
+      // console.log(quizNum);
 
-    addDoc(dbRef, data)
-      .then((docRef) => {
-        console.log(docRef.id);
-        setDocID(docRef.id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      setQuizNum(quizNum + 1);
 
-    // const docRef1 = doc(db, "AntwortenQuiz", docID);
-
-    // const updatingdata = {
-    //   frage1: e.currentTarget.innerText,
-    //   frage2: "British Columbia",
-    //   frage3: "CA",
-    // };
-
-    // setDoc(docRef1, updatingdata)
-    //   .then((docRef1) => {
-    //     console.log("Entire Document has been updated successfully");
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    setQuizNum(quizNum + 1);
+      console.log(Answers);
+    } else {
+      setAuswertung(true);
+    }
   }
+  console.log(Answers);
+
+  //auswertung
+  useEffect(() => {
+    async function auswertung() {
+      const dbRef = collection(db, "AntwortenQuiz");
+      if (Auswertung === true) {
+        console.log(Answers);
+        const startData = {
+          frage1: `${Answers[0]}`,
+          frage2: `${Answers[1]}`,
+          frage3: `${Answers[2]}`,
+        };
+        console.log(startData);
+        await addDoc(dbRef, startData)
+          .then((docRef) => {
+            console.log(docRef.id);
+            sessionStorage.setItem("QuizID", `${docRef.id}`);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        navigate(`/quizAuswertung`);
+      } else {
+      }
+    }
+    auswertung();
+  }, [Auswertung]);
+
+  // useEffect(() => {
+  //   console.log(Answers);
+  //   if (docID != null) {
+  //     const docRef1 = doc(db, "AntwortenQuiz", docID);
+
+  //     const updatingdata = {
+  //       frage1: Answers[0],
+  //       frage2: Answers[1],
+  //       frage3: Answers[2],
+  //     };
+
+  //     setDoc(docRef1, updatingdata, { merge: true })
+  //       .then((docRef1) => {
+  //         console.log("Entire Document has been updated successfully");
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   } else {
+  //   }
+  // }, [docID]);
 
   return (
     <div id="quizApp">

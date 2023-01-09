@@ -11,7 +11,7 @@ function QuizIntro() {
         abwechslungsreiche Reise durch die Welt des Wissens vor! Wir wünschen
         euch viel Spaß und viel Glück!
       </p>
-      <a href="/quizFrage">
+      <a href="/quizFragen">
         <button id="startbutton">Start</button>
       </a>
     </div>
