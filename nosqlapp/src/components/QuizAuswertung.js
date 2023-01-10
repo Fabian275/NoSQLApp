@@ -4,7 +4,9 @@ import { doc, getDoc } from "firebase/firestore";
 
 function QuizAuswertung({ docID }) {
   const [AuswertungData, setAuswertungData] = useState(null);
-  const [data, setData] = useState(null);
+  const [lösung, setLösung] = useState(null);
+  const [correctQuestins, setCorrectQuestins] = useState(0);
+  const [falseQuestins, setFalseQuestins] = useState(0);
 
   const auswertung = doc(db, "AntwortenQuiz", `${sessionStorage.QuizID}`);
   getDoc(auswertung).then((docSnap) => {
@@ -15,11 +17,12 @@ function QuizAuswertung({ docID }) {
     }
   });
 
-  const fragen = doc(db, "NoSqlQuiz", "quiz");
+  const fragen = doc(db, "FragenTest", "quiz");
   getDoc(fragen).then((docSnap) => {
     if (docSnap.exists()) {
-      if (data === null) {
-        setData(docSnap.data());
+      if (lösung === null) {
+        console.log(docSnap.data());
+        setLösung(docSnap.data());
       }
     }
   });
@@ -28,36 +31,31 @@ function QuizAuswertung({ docID }) {
     sessionStorage.removeItem("QuizID");
     window.location = `${window.location.origin}`;
   }
-  console.log(AuswertungData?.frage == data?.questions[0].answers[1].correct);
-  console.log(AuswertungData?.frage1);
+
   return (
     <div>
       <h1>Auswertung</h1>
       <p>Du hast 10/12 Richtig beantwortet.</p>
-      <div>
-        {AuswertungData?.frage1 === "Gepard" ? (
-          <div className="correct">
-            <p>Deine Antwort: {AuswertungData?.frage1}</p>
-          </div>
+      {AuswertungData?.antworten.map((item, i) => {
+        return item === lösung?.questions[i].Lösung ? (
+          <>
+            <h3>Frage{i + 1}</h3>
+            <div className="correct">
+              <p>Deine Antwort: {item}</p>
+              {/* {setCorrectQuestins(correctQuestins + 1)} */}
+            </div>
+          </>
         ) : (
-          <div className="falseAnswer">
-            <p>Deine Antwort: {AuswertungData?.frage1}</p>
-            <p>Lösung: Gepard</p>
-          </div>
-        )}
-      </div>
-      <div>
-        {AuswertungData?.frage2 === "China" ? (
-          <div className="correct">
-            <p>Deine Antwort: {AuswertungData?.frage2}</p>
-          </div>
-        ) : (
-          <div className="falseAnswer">
-            <p>Deine Antwort: {AuswertungData?.frage2}</p>
-            <p>Lösung:</p>
-          </div>
-        )}
-      </div>
+          <>
+            <h3>Frage{i + 1}</h3>
+            <div className="falseAnswer">
+              <p>Deine Antwort: {item}</p>
+              <p>Lösung: {lösung?.questions[i].Lösung}</p>
+              {/* {setFalseQuestins(falseQuestins + 1)} */}
+            </div>
+          </>
+        );
+      })}
       <button onClick={startNew}>Restart</button>
     </div>
   );

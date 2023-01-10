@@ -13,14 +13,14 @@ import { useNavigate } from "react-router-dom";
 
 function QuizFragen({ setDocID }) {
   const [data, setData] = useState(null);
-  const [quizNum, setQuizNum] = useState(0);
+  const [quizNum, setQuizNum] = useState(1);
 
   const [Answers, setAnswers] = useState([]);
   const [Auswertung, setAuswertung] = useState(false);
   const navigate = useNavigate();
   //daten holen
 
-  const fragen = doc(db, "NoSqlQuiz", "quiz");
+  const fragen = doc(db, "FragenTest", "quiz");
   getDoc(fragen).then((docSnap) => {
     if (docSnap.exists()) {
       if (data === null) {
@@ -28,17 +28,16 @@ function QuizFragen({ setDocID }) {
       }
     }
   });
-
+  console.log(data);
   //antwort auswählen
 
   function answer(e) {
     const currentAntwort = e.currentTarget.innerText;
     setAnswers((Answers) => [...Answers, currentAntwort]);
-    console.log(currentAntwort);
-    if (quizNum < 1) {
+    const quizLength = data.questions.length;
+    console.log(quizLength);
+    if (quizNum < quizLength) {
       // console.log(e.currentTarget.innerText);
-
-      // console.log(quizNum);
 
       setQuizNum(quizNum + 1);
 
@@ -56,9 +55,7 @@ function QuizFragen({ setDocID }) {
       if (Auswertung === true) {
         console.log(Answers);
         const startData = {
-          frage1: `${Answers[0]}`,
-          frage2: `${Answers[1]}`,
-          frage3: `${Answers[2]}`,
+          antworten: Answers,
         };
         console.log(startData);
         await addDoc(dbRef, startData)
@@ -101,23 +98,28 @@ function QuizFragen({ setDocID }) {
   return (
     <div id="quizApp">
       <div>
-        <h2>Frage {quizNum + 1}</h2>
+        <h2>Frage {quizNum}</h2>
       </div>
       <div id="fragenAntworten">
-        <h3 id="frage">{data?.questions[quizNum].question}</h3>
+        <h3 id="frage">{data?.questions[quizNum - 1].question}</h3>
       </div>
       <button className="antworten" onClick={answer}>
-        {data?.questions[quizNum].answers[0].option}
+        {data?.questions[quizNum - 1].answers[0].option}
       </button>
       <br />
       <br />
       <button className="antworten" onClick={answer}>
-        {data?.questions[quizNum].answers[1].option}
+        {data?.questions[quizNum - 1].answers[1].option}
       </button>
       <br />
       <br />
       <button className="antworten" onClick={answer}>
-        {data?.questions[quizNum].answers[2].option}
+        {data?.questions[quizNum - 1].answers[2].option}
+      </button>
+      <br />
+      <br />
+      <button className="antworten" onClick={answer}>
+        {data?.questions[quizNum - 1].answers[3].option}
       </button>
     </div>
   );
