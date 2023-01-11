@@ -3,19 +3,49 @@
   max-width: 500px;
 }
 
-#title {
+.quiz-title {
+  font-size: 36px;
+  font-weight: bold;
   text-align: center;
+  margin-top: 50px;
+}
+
+#title {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 50px;
+}
+
+#introText {
+  font-size: 18px;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 50px;
 }
 
 #startbutton {
-  width: 100%;
-  margin: 10px;
+  padding: 10px 20px;
+  width: 300px;
+  font-size: 18px;
+  color: white;
+  background-color: #039cee;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
-.correct {
-  background-color: green;
+#startbutton:hover {
+  background-color: #0078b9;
 }
 
-.falseAnswer {
-  background-color: red;
+#linkButton {
+  text-decoration: none;
+}
+
+#everyPage {
+  zoom: 200%;
 }

@@ -2,7 +2,7 @@ function QuizIntro() {
   return (
     <div id="quizApp">
       <h1 id="title">QUIZ APP</h1>
-      <p>
+      <p id="introText">
         Willkommen zu unserem Quiz! In den nächsten Minuten werden wir eure
         Allgemeinbildung auf die Probe stellen und eure Kenntnisse in
         verschiedenen Bereichen testen. Ihr werdet Fragen aus den Bereichen
@@ -11,8 +11,11 @@ function QuizIntro() {
         abwechslungsreiche Reise durch die Welt des Wissens vor! Wir wünschen
         euch viel Spaß und viel Glück!
       </p>
-      <a href="/quizFragen">
+      <a href="/quizFragen" id="linkButton">
         <button id="startbutton">Start</button>
+      </a>
+      <a href="/quizAdmin">
+        <button>Admin</button>
       </a>
     </div>
   );
